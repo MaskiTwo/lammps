@@ -1,7 +1,7 @@
 # Use a base image with build tools
 FROM ubuntu:22.04
 
-# Install necessary dependencies for building LAMMPS
+# Install necessary dependencies for building LAMMPS, including Python3 and its development headers
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
@@ -10,13 +10,14 @@ RUN apt-get update && apt-get install -y \
     libopenmpi-dev \
     openmpi-bin \
     libjpeg-dev \
-    libpng-dev
+    libpng-dev \
+    python3 \
+    python3-dev
 
 # Set the working directory inside the container
 WORKDIR /usr/src/lammps
 
 # Copy the source code into the container
-# The Dokploy build process provides the source code in the build context
 COPY . .
 
 # Create a build directory and run CMake
@@ -28,7 +29,5 @@ RUN cmake ../cmake
 RUN make -j$(nproc)
 
 # Set the final command to run when the container starts
-# This example assumes the 'lmp' executable is in the build/bin directory
-# Adjust this path if necessary based on your build
 ENV PATH="/usr/src/lammps/build/bin:${PATH}"
 CMD ["lmp"]
