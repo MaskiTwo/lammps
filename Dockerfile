@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-dev
 
-# Set the working directory inside the container
+# Set the working directory inside the container for building
 WORKDIR /usr/src/lammps
 
 # Copy the source code into the container
@@ -28,6 +28,10 @@ RUN cmake ../cmake
 # Compile the LAMMPS executable with multiple threads
 RUN make -j$(nproc)
 
-# Set the final command to run when the container starts
-ENV PATH="/usr/src/lammps/build/bin:${PATH}"
-CMD ["tail", "-f", "/dev/null"]
+# --- NEW LINES START HERE ---
+
+# Set the working directory to the specific example folder
+WORKDIR /usr/src/lammps/examples/flow
+
+# Set the final command to run the simulation
+CMD ["/usr/src/lammps/build/bin/lmp", "-in", "in.flow"]
