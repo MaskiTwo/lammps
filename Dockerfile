@@ -30,4 +30,4 @@ RUN make -j$(nproc)
 
 # Set the final command to run when the container starts
 ENV PATH="/usr/src/lammps/build/bin:${PATH}"
-CMD ["lmp"]
+CMD ["tail", "-f", "/dev/null"]
